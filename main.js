@@ -56,7 +56,7 @@ rockTexture.wrapS = THREE.RepeatWrapping;
 rockTexture.wrapT = THREE.RepeatWrapping;
 rockTexture.repeat.set(4, 4); 
 
-// Geomtria da rocha
+// Geometria da rocha
 const rockGeometry = new THREE.CylinderGeometry(4.5, 3.5, 4, 32);
 const rockMaterial = new THREE.MeshStandardMaterial({ map: rockTexture}); // marrom 
 const rock = new THREE.Mesh(rockGeometry, rockMaterial);
@@ -77,6 +77,21 @@ block1.castShadow = true;
 // ===================================================
 // ===================================================
 
+// Textura da rocha
+const waterTexture = textureLoader.load('textures/water.jpg');
+waterTexture.wrapS = THREE.RepeatWrapping;
+waterTexture.wrapT = THREE.RepeatWrapping;
+waterTexture.repeat.set(4, 4); 
+
+//não sei o que to fznd mas vou tentar colocar uma água em volta dessa ilha 
+const waterGeometry = new THREE.PlaneGeometry(90, 30, 1, 1);
+const waterMaterial = new THREE.MeshStandardMaterial({ map: waterTexture, transparent: true, opacity: 0.7 });
+const water = new THREE.Mesh(waterGeometry, waterMaterial);
+water.position.y = -1;
+water.rotation.x = -Math.PI/2;
+
+scene.add(water);
+
 scene.add(islandGroup); 
 
 // *********** ANIMACAO ***********
@@ -84,6 +99,9 @@ scene.add(islandGroup);
 // essa funçao é chamada em loop
 function animate() {
     islandGroup.rotation.y += 0.002; // Rotaciona a ilha lentamente
+
+    waterTexture.offset.x += 0.001; // move a textura da água
+    waterTexture.offset.y += 0.001;
 
 	renderer.render(scene, camera);
 }

@@ -31,6 +31,21 @@ scene.add(directionalLight);
 // Texture
 const textureLoader = new THREE.TextureLoader();
 
+// ======= ÁGUA =======
+// Textura 
+const waterTexture = textureLoader.load('textures/water.jpg');
+waterTexture.wrapS = THREE.RepeatWrapping;
+waterTexture.wrapT = THREE.RepeatWrapping;
+waterTexture.repeat.set(4, 4); 
+
+const waterGeometry = new THREE.PlaneGeometry(90, 30, 1, 1);
+const waterMaterial = new THREE.MeshStandardMaterial({ map: waterTexture, transparent: true, opacity: 0.7 });
+const water = new THREE.Mesh(waterGeometry, waterMaterial);
+water.position.y = -1;
+water.rotation.x = -Math.PI/2;
+
+scene.add(water);
+
 // ======= ILHA =======
 // Criando grupo da ilha
 const islandGroup = new THREE.Group();
@@ -64,33 +79,49 @@ rock.position.y = -2.5;
 rock.receiveShadow = true;
 islandGroup.add(rock);
 
-// ===================================================
-// BLOCO APENAS PARA TESTE DE SOMBRA DEPOIS PODE TIRAR
-// ===================================================
-const blockGeometry = new THREE.BoxGeometry(1, 1, 1);
-const blockMaterial = new THREE.MeshStandardMaterial({ color: 0x4D122F }); 
-const block1 = new THREE.Mesh(blockGeometry, blockMaterial);
-block1.position.set(0, 1, 0);
-islandGroup.add(block1);
-block1.castShadow = true;
-// ===================================================
-// ===================================================
-// ===================================================
+// ====== CACHOEIRA =======
+//Montanhas
+const mountain1Geometry = new THREE.CapsuleGeometry(1.5, 2, 5, 8, 6);
+const mountain1 = new THREE.Mesh(mountain1Geometry, grassMaterial);
+mountain1.position.x = 2;
+mountain1.position.y = 2;
 
-// Textura da rocha
-const waterTexture = textureLoader.load('textures/water.jpg');
-waterTexture.wrapS = THREE.RepeatWrapping;
-waterTexture.wrapT = THREE.RepeatWrapping;
-waterTexture.repeat.set(4, 4); 
+islandGroup.add(mountain1);
 
-//não sei o que to fznd mas vou tentar colocar uma água em volta dessa ilha 
-const waterGeometry = new THREE.PlaneGeometry(90, 30, 1, 1);
-const waterMaterial = new THREE.MeshStandardMaterial({ map: waterTexture, transparent: true, opacity: 0.7 });
-const water = new THREE.Mesh(waterGeometry, waterMaterial);
-water.position.y = -1;
-water.rotation.x = -Math.PI/2;
+const mountain2 = new THREE.Mesh(mountain1Geometry, grassMaterial);
+mountain2.position.x = -1.8;
+mountain2.position.y = 2;
 
-scene.add(water);
+islandGroup.add(mountain2);
+
+const mountain3Geometry = new THREE.CapsuleGeometry(2, 3, 5, 8, 6);
+const mountain3 = new THREE.Mesh(mountain3Geometry, grassMaterial);
+mountain3.position.set(0, 2, -1.9);
+
+islandGroup.add(mountain3)
+
+//queda d'água
+const waterfallTexture = textureLoader.load('textures/waterfall.jpg');
+waterfallTexture.wrapS = THREE.RepeatWrapping;
+waterfallTexture.wrapT = THREE.RepeatWrapping;
+waterfallTexture.repeat.set(1, 4); 
+
+const waterfallGeometry = new THREE.CapsuleGeometry(1.2, 4.5);
+const waterfallMaterial = new THREE.MeshStandardMaterial({ map: waterfallTexture, color: 0x3CAEA3, transparent: true, opacity: 0.7 }); 
+const waterfall = new THREE.Mesh(waterfallGeometry, waterfallMaterial);
+
+waterfall.position.set(0, 0.8, -0.5);
+
+islandGroup.add(waterfall);
+
+//lago
+const lakeGeometry = new THREE.CircleGeometry(3.5, 32);
+const lakeMaterial = new THREE.MeshStandardMaterial({ map: waterTexture, color: 0x3CAEA3, transparent: true, opacity: 0.7 })
+const lake = new THREE.Mesh(lakeGeometry, lakeMaterial);
+lake.rotation.x = -Math.PI/2;
+lake.position.set(0, 0.55, 0);
+
+islandGroup.add(lake);
 
 scene.add(islandGroup); 
 
@@ -98,10 +129,12 @@ scene.add(islandGroup);
 
 // essa funçao é chamada em loop
 function animate() {
-    islandGroup.rotation.y += 0.002; // Rotaciona a ilha lentamente
+    //islandGroup.rotation.y += 0.002; // Rotaciona a ilha lentamente
 
     waterTexture.offset.x += 0.001; // move a textura da água
     waterTexture.offset.y += 0.001;
+
+    waterfallTexture.offset.y += 0.005; // descida na cachoeira
 
 	renderer.render(scene, camera);
 }

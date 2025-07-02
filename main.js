@@ -81,22 +81,24 @@ islandGroup.add(rock);
 
 // ====== CACHOEIRA =======
 //Montanhas
-const mountain1Geometry = new THREE.CapsuleGeometry(1.5, 2, 5, 8, 6);
-const mountain1 = new THREE.Mesh(mountain1Geometry, grassMaterial);
-mountain1.position.x = 2;
-mountain1.position.y = 2;
+const mountain1Geometry = new THREE.SphereGeometry(1.4, 32, 32);
+const mountain1 = new THREE.Mesh(mountain1Geometry, rockMaterial);
+mountain1.scale.set(1, 0.6, 1); 
+mountain1.position.set(1.8, 0.8, 0);
 
 islandGroup.add(mountain1);
 
-const mountain2 = new THREE.Mesh(mountain1Geometry, grassMaterial);
-mountain2.position.x = -1.8;
-mountain2.position.y = 2;
+const mountain2Geometry = new THREE.SphereGeometry(1.6, 32, 32);
+const mountain2 = new THREE.Mesh(mountain2Geometry, rockMaterial);
+mountain2.scale.set(1, 0.6, 1); 
+mountain2.position.set(-1.8, 0.8, 0);
 
 islandGroup.add(mountain2);
 
-const mountain3Geometry = new THREE.CapsuleGeometry(2, 3, 5, 8, 6);
-const mountain3 = new THREE.Mesh(mountain3Geometry, grassMaterial);
-mountain3.position.set(0, 2, -1.9);
+const mountain3Geometry = new THREE.CapsuleGeometry(2, 0.5, 5, 8, 6);
+const mountain3 = new THREE.Mesh(mountain3Geometry, rockMaterial);
+mountain3.scale.set(1, 0.8, 1); 
+mountain3.position.set(0, 1, -2); 
 
 islandGroup.add(mountain3)
 
@@ -106,22 +108,42 @@ waterfallTexture.wrapS = THREE.RepeatWrapping;
 waterfallTexture.wrapT = THREE.RepeatWrapping;
 waterfallTexture.repeat.set(1, 4); 
 
-const waterfallGeometry = new THREE.CapsuleGeometry(1.2, 4.5);
+const waterfallGeometry = new THREE.CapsuleGeometry(0.9, 1.5);
 const waterfallMaterial = new THREE.MeshStandardMaterial({ map: waterfallTexture, color: 0x3CAEA3, transparent: true, opacity: 0.7 }); 
 const waterfall = new THREE.Mesh(waterfallGeometry, waterfallMaterial);
 
-waterfall.position.set(0, 0.8, -0.5);
+waterfall.position.set(0, 1, -0.5);
 
 islandGroup.add(waterfall);
 
 //lago
-const lakeGeometry = new THREE.CircleGeometry(3.5, 32);
+const lakeGeometry = new THREE.CircleGeometry(2.5, 32);
 const lakeMaterial = new THREE.MeshStandardMaterial({ map: waterTexture, color: 0x3CAEA3, transparent: true, opacity: 0.7 })
 const lake = new THREE.Mesh(lakeGeometry, lakeMaterial);
 lake.rotation.x = -Math.PI/2;
 lake.position.set(0, 0.55, 0);
 
 islandGroup.add(lake);
+
+// ====== ÁRVORES =======
+
+// Tronco
+const trunkGeometry = new THREE.CylinderGeometry(0.2, 0, 4, 8);
+const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8B5A2B }); 
+const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+
+// Folhas
+const leavesGeometry = new THREE.SphereGeometry(1, 16, 16);
+const leavesMaterial = new THREE.MeshStandardMaterial({ color: 0x32CD32 }); 
+const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
+leaves.position.y = 2.9; //precisa ficar em cima do tronco
+
+const tree1 = new THREE.Group();
+tree1.add(trunk);
+tree1.add(leaves);
+
+tree1.position.set(2, 0, -1.5); 
+islandGroup.add(tree1);
 
 scene.add(islandGroup); 
 

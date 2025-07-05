@@ -53,6 +53,38 @@ const islandGroup = new THREE.Group();
 // 1º objeto: a base da ilha -- grama e rocha
 // Textura da grama
 const grassTexture = textureLoader.load('textures/grass.jpg'); 
+const shaderGrass = new THREE.RawShaderMaterial({
+    uniforms: {
+        texture: { value: grassTexture }
+    },
+    
+    vertexShader: `
+        precision mediump float;
+        attribute vec3 position;
+        attribute vec2 uv;
+
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectionMatrix;
+
+        varying vec2 vUv;
+
+        void main(){
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); 
+        }
+    `,
+    fragmentShader: `
+        precision mediump float;
+        varying vec2 vUv;
+        uniform sampler2D texture;
+
+        void main(){
+            gl_FragColor = texture2D(texture, vUv);
+        }
+
+    `     
+});
+
 grassTexture.wrapS = THREE.RepeatWrapping; // Repetir no eixo horizontal
 grassTexture.wrapT = THREE.RepeatWrapping; // Repetir no eixo vertical
 grassTexture.repeat.set(4, 4);
@@ -60,7 +92,7 @@ grassTexture.repeat.set(4, 4);
 // Geometria da grama
 const grassGeometry = new THREE.CylinderGeometry(5, 5, 1, 32);
 const grassMaterial = new THREE.MeshStandardMaterial({ map: grassTexture, color: 0x7ac459}); // verde
-const grass = new THREE.Mesh(grassGeometry, grassMaterial);
+const grass = new THREE.Mesh(grassGeometry, shaderGrass);
 grass.position.y = 0;
 grass.receiveShadow = true; 
 islandGroup.add(grass); 
@@ -102,15 +134,86 @@ mountain3.position.set(0, 1, -2);
 
 islandGroup.add(mountain3)
 
-//queda d'água
 const waterfallTexture = textureLoader.load('textures/waterfall.jpg');
+//queda d'água
+const shaderWaterfall = new THREE.RawShaderMaterial({
+    uniforms: {
+        texture: { value: waterfallTexture },
+        offset: { value: new THREE.Vector2(0,0) }
+    },
+    transparent: true,
+    opacity: 0.7,
+    
+    vertexShader: `
+        precision mediump float;
+        attribute vec3 position;
+        attribute vec2 uv;
+
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectionMatrix;
+
+        varying vec2 vUv;
+
+        void main(){
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); 
+        }
+    `,
+    fragmentShader: `
+        precision mediump float;
+        varying vec2 vUv;
+        uniform sampler2D texture;
+        uniform vec2 offset;
+
+        void main(){
+            vec2 uv = vUv + offset;
+            gl_FragColor = texture2D(texture, uv);
+        }
+
+    `     
+});
+
+const shaderLake = new THREE.RawShaderMaterial({
+    uniforms: {
+        texture: { value: waterfallTexture }
+    },
+    transparent: true,
+    opacity: 0.7,
+    
+    vertexShader: `
+        precision mediump float;
+        attribute vec3 position;
+        attribute vec2 uv;
+
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectionMatrix;
+
+        varying vec2 vUv;
+
+        void main(){
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); 
+        }
+    `,
+    fragmentShader: `
+        precision mediump float;
+        varying vec2 vUv;
+        uniform sampler2D texture;
+
+        void main(){
+            gl_FragColor = texture2D(texture, vUv);
+        }
+
+    `     
+});
+
 waterfallTexture.wrapS = THREE.RepeatWrapping;
 waterfallTexture.wrapT = THREE.RepeatWrapping;
 waterfallTexture.repeat.set(1, 4); 
 
 const waterfallGeometry = new THREE.CapsuleGeometry(0.9, 1.5);
 const waterfallMaterial = new THREE.MeshStandardMaterial({ map: waterfallTexture, color: 0x3CAEA3, transparent: true, opacity: 0.7 }); 
-const waterfall = new THREE.Mesh(waterfallGeometry, waterfallMaterial);
+const waterfall = new THREE.Mesh(waterfallGeometry, shaderWaterfall);
 
 waterfall.position.set(0, 1, -0.5);
 
@@ -119,7 +222,7 @@ islandGroup.add(waterfall);
 //lago
 const lakeGeometry = new THREE.CircleGeometry(2.5, 32);
 const lakeMaterial = new THREE.MeshStandardMaterial({ map: waterTexture, color: 0x3CAEA3, transparent: true, opacity: 0.7 })
-const lake = new THREE.Mesh(lakeGeometry, lakeMaterial);
+const lake = new THREE.Mesh(lakeGeometry, shaderLake);
 lake.rotation.x = -Math.PI/2;
 lake.position.set(0, 0.55, 0);
 
@@ -156,7 +259,7 @@ function animate() {
     waterTexture.offset.x += 0.001; // move a textura da água
     waterTexture.offset.y += 0.001;
 
-    waterfallTexture.offset.y += 0.005; // descida na cachoeira
+    shaderWaterfall.uniforms.offset.value.y += 0.001; // descida na cachoeira
 
 	renderer.render(scene, camera);
 }

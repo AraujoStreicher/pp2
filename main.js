@@ -248,6 +248,38 @@ tree1.add(leaves);
 tree1.position.set(2, 0, -1.5); 
 islandGroup.add(tree1);
 
+
+// ====== BARQUINHO =======
+
+const boat = new THREE.Group();
+
+// Casco do barco
+const hullGeometry = new THREE.SphereGeometry(0.6, 24, 24, 0, Math.PI * 2, 0, Math.PI / 2);
+const hullMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513, side: THREE.DoubleSide }); // colore os dois lados da face
+const hull = new THREE.Mesh(hullGeometry, hullMaterial);
+hull.scale.set(1.5, 0.7, 0.7); // esticar e achatar
+hull.position.y = 0.95;
+hull.rotation.x = Math.PI ;
+boat.add(hull);
+
+// Mastro
+const mastGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1.3);
+const mastMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+const mast = new THREE.Mesh(mastGeometry, mastMaterial);
+mast.position.y = 1.3;
+boat.add(mast);
+
+// Vela
+const sailGeometry = new THREE.PlaneGeometry(0.7, 0.7);
+const sailMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+const sail = new THREE.Mesh(sailGeometry, sailMaterial);
+sail.position.y = 1.5;
+sail.position.x = 0.4;
+boat.add(sail);
+
+boat.position.set(-3, 0, 3.5); 
+islandGroup.add(boat);
+
 scene.add(islandGroup); 
 
 // *********** ANIMACAO ***********

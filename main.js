@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'https://unpkg.com/three@0.165.0/examples/jsm/loaders/GLTFLoader.js';
 
 // Cena
 const scene = new THREE.Scene();
@@ -91,7 +92,6 @@ grassTexture.repeat.set(4, 4);
 
 // Geometria da grama
 const grassGeometry = new THREE.CylinderGeometry(5, 5, 1, 32);
-const grassMaterial = new THREE.MeshStandardMaterial({ map: grassTexture, color: 0x7ac459}); // verde
 const grass = new THREE.Mesh(grassGeometry, shaderGrass);
 grass.position.y = 0;
 grass.receiveShadow = true; 
@@ -212,7 +212,6 @@ waterfallTexture.wrapT = THREE.RepeatWrapping;
 waterfallTexture.repeat.set(1, 4); 
 
 const waterfallGeometry = new THREE.CapsuleGeometry(0.9, 1.5);
-const waterfallMaterial = new THREE.MeshStandardMaterial({ map: waterfallTexture, color: 0x3CAEA3, transparent: true, opacity: 0.7 }); 
 const waterfall = new THREE.Mesh(waterfallGeometry, shaderWaterfall);
 
 waterfall.position.set(0, 1, -0.5);
@@ -221,7 +220,6 @@ islandGroup.add(waterfall);
 
 //lago
 const lakeGeometry = new THREE.CircleGeometry(2.5, 32);
-const lakeMaterial = new THREE.MeshStandardMaterial({ map: waterTexture, color: 0x3CAEA3, transparent: true, opacity: 0.7 })
 const lake = new THREE.Mesh(lakeGeometry, shaderLake);
 lake.rotation.x = -Math.PI/2;
 lake.position.set(0, 0.55, 0);
@@ -230,24 +228,13 @@ islandGroup.add(lake);
 
 // ====== ÁRVORES =======
 
-// Tronco
-const trunkGeometry = new THREE.CylinderGeometry(0.2, 0, 4, 8);
-const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8B5A2B }); 
-const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
-
-// Folhas
-const leavesGeometry = new THREE.SphereGeometry(1, 16, 16);
-const leavesMaterial = new THREE.MeshStandardMaterial({ color: 0x32CD32 }); 
-const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
-leaves.position.y = 2.9; //precisa ficar em cima do tronco
-
-const tree1 = new THREE.Group();
-tree1.add(trunk);
-tree1.add(leaves);
-
-tree1.position.set(2, 0, -1.5); 
-islandGroup.add(tree1);
-
+const loader = new GLTFLoader();
+loader.load('/modelos/Tree.glb', (gltf) => {
+  const tree = gltf.scene;
+  tree.scale.set(0.3, 0.3, 0.3);
+  tree.position.set(3.2, 0, -1);
+  islandGroup.add(tree);
+});
 
 // ====== BARQUINHO =======
 

@@ -264,7 +264,7 @@ sail.position.y = 1.5;
 sail.position.x = 0.4;
 boat.add(sail);
 
-boat.position.set(-3, 0, 3.5); 
+boat.position.set(44, -1.5, -8); 
 islandGroup.add(boat);
 
 scene.add(islandGroup); 
@@ -279,6 +279,12 @@ function animate() {
     waterTexture.offset.y += 0.001;
 
     shaderWaterfall.uniforms.offset.value.y += 0.001; // descida na cachoeira
+
+    boat.position.x -= 0.03; // Barquinho se move pra esquerda
+    if (boat.position.x < -44) { // Se chegar no limite, volta pra posicao inicial
+      boat.position.x = 44; 
+    }
+
 
 	renderer.render(scene, camera);
 }

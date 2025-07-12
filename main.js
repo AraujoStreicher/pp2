@@ -9,7 +9,7 @@ scene.background = new THREE.Color(0x9FC5E8); // fundo azul clarinho
 // PerspectiveCamera(campo de visão, proporção, perto, longe)
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 10; // Afasta a câmera 5 unidades para a gnt conseguit ver algo
-camera.position.y = 5; // Eleva a câmera para ver a ilha de cima
+camera.position.y = 5; // Eleva a câmera para ver a ilha de cima //5
 camera.lookAt(0, 0, 0); // Centraliza
 
 // Renderizador
@@ -234,6 +234,45 @@ loader.load('/modelos/Tree.glb', (gltf) => {
   tree.scale.set(0.3, 0.3, 0.3);
   tree.position.set(3.2, 0, -1);
   islandGroup.add(tree);
+});
+
+loader.load('/modelos/Coconut palm tree.glb', (gltf) => {
+    const coconut_tree = gltf.scene;
+    coconut_tree.scale.set(0.3, 0.3, 0.3);
+    coconut_tree.position.set(-2, 0, -1.5);
+    islandGroup.add(coconut_tree);
+})
+
+loader.load('/modelos/Fishtail palm tree.glb', (gltf) => {
+    const fishtail_tree = gltf.scene;
+    fishtail_tree.scale.set(0.3, 0.3, 0.3);
+    fishtail_tree.position.set(3.5, 0, 1);
+    islandGroup.add(fishtail_tree);
+})
+
+loader.load('/modelos/Palm tree.glb', (gltf) => {
+    const palm_tree = gltf.scene;
+    palm_tree.scale.set(0.5, 0.5, 0.5);
+    palm_tree.position.set(-3, 0, 1.8);
+    islandGroup.add(palm_tree);
+})
+
+// ====== BARRACA =======
+loader.load('/modelos/Tent.glb', (gltf) => {
+    const tent = gltf.scene;
+    tent.scale.set(0.6, 0.6, 0.6);
+    tent.position.set(2.3, 1, 3);
+    tent.rotation.y = -Math.PI/6
+    islandGroup.add(tent);
+});
+
+// ====== FOGUEIRA =======
+loader.load('/modelos/Campfire.glb', (gltf) => {
+    const campfire = gltf.scene;
+    campfire.scale.set(0.1, 0.1, 0.1);
+    campfire.position.set(0.7, 0.5, 4.1);
+    campfire.rotation.y = Math.PI/3
+    islandGroup.add(campfire);
 });
 
 // ====== BARQUINHO =======

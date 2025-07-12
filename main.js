@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'https://unpkg.com/three@0.165.0/examples/jsm/loaders/GLTFLoader.js';
+import { FontLoader } from 'https://unpkg.com/three@0.165.0/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'https://unpkg.com/three@0.165.0/examples/jsm/geometries/TextGeometry.js';
 
 // Cena
 const scene = new THREE.Scene();
@@ -11,6 +13,14 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 camera.position.z = 10; // Afasta a câmera 5 unidades para a gnt conseguit ver algo
 camera.position.y = 5; // Eleva a câmera para ver a ilha de cima //5
 camera.lookAt(0, 0, 0); // Centraliza
+
+const camera2 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera2.position.z = 0; // Afasta a câmera 5 unidades para a gnt conseguit ver algo
+camera2.position.y = 15; // Eleva a câmera para ver a ilha de cima 
+camera2.position.x = 0;
+camera2.lookAt(0, 0, 0); // Centraliza
+
+let activeCam = camera
 
 // Renderizador
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -275,6 +285,101 @@ loader.load('/modelos/Campfire.glb', (gltf) => {
     islandGroup.add(campfire);
 });
 
+// ===== PEDRINHAS =======
+loader.load('/modelos/Rocks.glb', (gltf) => {
+    const small_rocks = gltf.scene;
+    small_rocks.scale.set(2, 2, 2);
+    small_rocks.position.set(-2, 0.7, 2.1);
+    small_rocks.rotation.y = Math.PI/3
+
+    small_rocks.traverse((child) => {
+        if (child.isMesh) {
+            child.material = rockMaterial;
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+
+    islandGroup.add(small_rocks);
+});
+
+loader.load('/modelos/Rocks.glb', (gltf) => {
+    const small_rocks = gltf.scene;
+    small_rocks.scale.set(2, 2, 2);
+    small_rocks.position.set(-2.8, 0.7, 1.8);
+    small_rocks.rotation.y = Math.PI/2
+
+    small_rocks.traverse((child) => {
+        if (child.isMesh) {
+            child.material = rockMaterial;
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+
+    islandGroup.add(small_rocks);
+});
+
+loader.load('/modelos/Rocks.glb', (gltf) => {
+    const small_rocks = gltf.scene;
+    small_rocks.scale.set(2, 2, 2);
+    small_rocks.position.set(2.4, 0.7, 1.8);
+    small_rocks.rotation.y = Math.PI/2
+
+    small_rocks.traverse((child) => {
+        if (child.isMesh) {
+            child.material = rockMaterial;
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+
+    islandGroup.add(small_rocks);
+});
+
+// ====== FLORZINHAS ======
+loader.load('/modelos/bush.glb', (gltf) => {
+    const bushWithFlowers = gltf.scene;
+    bushWithFlowers.scale.set(0.9, 0.9, 0.9);
+    bushWithFlowers.position.set(-2.6, 0.7, 3.6);
+    bushWithFlowers.rotation.y = Math.PI/2
+
+    islandGroup.add(bushWithFlowers);
+});
+
+
+loader.load('/modelos/Lily Pad.glb', (gltf) => {
+    const bushWithFlowers = gltf.scene;
+    bushWithFlowers.scale.set(0.06, 0.06, 0.06);
+    bushWithFlowers.position.set(0.4,0.6,2);
+    bushWithFlowers.rotation.y = Math.PI
+
+    islandGroup.add(bushWithFlowers);
+});
+
+// ====== TEXTINHO =======
+const fontLoader = new FontLoader();
+fontLoader.load('https://unpkg.com/three@0.165.0/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+    const textGeometry = new TextGeometry('feito com amor  : )', {
+        font: font,
+        size: 0.5,
+        height: 0.1,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.02,
+        bevelSize: 0.02,
+        bevelSegments: 5
+    });
+
+    const textMaterial = new THREE.MeshStandardMaterial({ color: 0xff4081 });
+    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+    textMesh.position.set(15, 0.5, 10); 
+    textMesh.rotation.x = -Math.PI/2;
+
+    scene.add(textMesh);
+});
+
+
 // ====== BARQUINHO =======
 
 const boat = new THREE.Group();
@@ -308,6 +413,13 @@ islandGroup.add(boat);
 
 scene.add(islandGroup); 
 
+// Função para alternar entre cameras
+window.addEventListener('keydown', (event) => {
+    if (event.key.toLowerCase() === 'c') {
+        activeCam = activeCam === camera ? camera2 : camera;
+    }
+});
+
 // *********** ANIMACAO ***********
 
 // essa funçao é chamada em loop
@@ -325,7 +437,7 @@ function animate() {
     }
 
 
-	renderer.render(scene, camera);
+	renderer.render(scene, activeCam);
 }
 renderer.setAnimationLoop( animate );
 
